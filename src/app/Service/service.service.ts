@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Persona} from '../Modelo/Persona'
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -10,9 +11,18 @@ export class ServiceService {
  
   constructor( private http:HttpClient) { }
 
-  Url= 'http://localhost:8070/usuario';
+  Url= 'http://localhost:8070/usuario/';
 
-  getPersonas(){
-    return this.http.get<Persona[]>(this.Url)
+  getPersonas(id=''){
+    return this.http.get<any>(this.Url+id).pipe(map( (data)=>{
+      console.log(data.length);
+      let informacion: Persona[]=[];
+      if (data.length){
+        informacion=data;
+      }else {
+        informacion.push(data);
+      }
+      return informacion;
+    }))
   }
 }
